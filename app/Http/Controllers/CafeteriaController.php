@@ -43,6 +43,14 @@ class CafeteriaController extends Controller
 
     public function save(Request $request)
     {
+        $cafeterias = $this->index();
+
+        $summary = 0;
+        foreach ($cafeterias as $cafeteria)
+            $year_summary += ( $cafeteria->month === $request->input('month', '') ? $request->input('amount', 0) : $cafeteria->amount);
+
+        //zseb korlát
+
         $month = $request->input('month');
         if($this->show($month))
             $this->update($request, $month);
