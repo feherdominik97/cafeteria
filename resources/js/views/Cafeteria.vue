@@ -26,16 +26,11 @@
                 td {{ cafeteria.amount }}
 </template>
 <script>
+import axios from 'axios';
 export default {
     data() {
         return {
-            cafeterias: [
-                {
-                    pocket: 'p',
-                    amount: 1000,
-                    month: 'January'
-                }
-            ],
+            cafeterias: [],
             months: [
                 'January',
                 'February',
@@ -66,16 +61,10 @@ export default {
     },
     methods: {
         getCafeterias() {
-            /*
-                get all the cafeterias
-             */
-            console.log('get');
+            axios.get('cafeterias').then(response => this.cafeterias = response.data);
         },
         saveCafeteria() {
-            /*
-              save the cafeteria
-             */
-            console.log('save');
+            axios.post('cafeteria', this.selected).then(() => this.getCafeterias());
         }
     }
 }
