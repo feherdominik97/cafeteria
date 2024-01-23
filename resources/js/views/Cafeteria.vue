@@ -14,6 +14,8 @@
             input(v-model="selected.amount")
         .input
             button(@click="saveCafeteria") Save
+        .input
+            button(@click="exportDataToCSV") Export
     .input-group
         table
             tr
@@ -35,6 +37,7 @@ export default {
                 'January',
                 'February',
                 'March',
+                'April',
                 'May',
                 'June',
                 'July',
@@ -65,6 +68,24 @@ export default {
         },
         saveCafeteria() {
             axios.post('cafeteria', this.selected).then(() => this.getCafeterias());
+        },
+        exportDataToCSV() {
+            const csvContent = this.convertToCSV(this.cafeterias);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link =  document.createElement('a');
+
+            link.href = url;
+            link.setAttribute('download', 'cafeteria.csv');
+            link.click();
+        },
+        convertToCSV(data) {
+            const headers = Object.keys(data[0]);
+            const rows = data.map(obj => headers.map(header => obj[header]));
+            const headerRow = headers.join(',');
+            const csvRows = [headerRow, ...rows.map(row => row.join(','))];
+
+            return csvRows.join('\n');
         }
     }
 }
